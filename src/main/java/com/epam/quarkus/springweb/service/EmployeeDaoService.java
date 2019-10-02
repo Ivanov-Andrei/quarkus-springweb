@@ -9,4 +9,8 @@ public interface EmployeeDaoService {
     void save(Employee employee);
 
     List<Employee> findAll();
+
+    void deleteAll();
+
+    void saveAll(List<Employee> employees);
 }

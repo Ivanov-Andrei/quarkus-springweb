@@ -1,7 +1,7 @@
 package com.epam.quarkus.springweb.controller;
 
 import com.epam.quarkus.springweb.model.Employee;
-import com.epam.quarkus.springweb.repository.EmployeeRepository;
+import com.epam.quarkus.springweb.service.EmployeeDaoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.runtime.annotations.RegisterForReflection;
@@ -27,7 +27,7 @@ public class EmployeeControllerTest {
     private Employee secondEmployee;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeDaoService employeeDaoService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -35,7 +35,7 @@ public class EmployeeControllerTest {
     @BeforeEach
     public void setUp() {
         expectedEmployees = new ArrayList<>();
-        employeeRepository.deleteAll();
+        employeeDaoService.deleteAll();
         firstEmployee = Employee.builder()
                 .name("firstName")
                 .surname("firstSurname")
@@ -54,7 +54,7 @@ public class EmployeeControllerTest {
         //Given
         expectedEmployees.add(firstEmployee);
         expectedEmployees.add(secondEmployee);
-        employeeRepository.saveAll(expectedEmployees);
+        employeeDaoService.saveAll(expectedEmployees);
         //When
         List actualEmployees = given()
                 .when()
@@ -93,7 +93,7 @@ public class EmployeeControllerTest {
     @Test
     public void updateEmployeeTest() throws JsonProcessingException {
         //Given
-        employeeRepository.save(firstEmployee);
+        employeeDaoService.save(firstEmployee);
         firstEmployee.setPosition("updatedPosition");
         expectedEmployees.add(firstEmployee);
         //When

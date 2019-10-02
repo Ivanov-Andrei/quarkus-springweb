@@ -34,4 +34,14 @@ public class EmployeeDaoServiceImpl implements EmployeeDaoService {
     public List<Employee> findAll() {
         return employeeRepository.findAll();
     }
+
+    @Override
+    public void deleteAll() {
+        employeeRepository.deleteAll();
+    }
+
+    @Override
+    public void saveAll(List<Employee> employees) {
+        employeeRepository.saveAll(employees);
+    }
 }
