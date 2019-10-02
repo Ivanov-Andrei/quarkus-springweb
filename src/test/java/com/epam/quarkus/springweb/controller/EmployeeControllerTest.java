@@ -32,7 +32,7 @@ public class EmployeeControllerTest {
         Employee employee = Employee.builder()
                 .id(1L)
                 .name("testName")
-                .surName("testSurname")
+                .surname("testSurname")
                 .position("testPosition")
                 .build();
         employeeRepository.save(employee);
