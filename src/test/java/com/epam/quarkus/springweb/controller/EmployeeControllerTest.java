@@ -2,6 +2,7 @@ package com.epam.quarkus.springweb.controller;
 
 import com.epam.quarkus.springweb.model.Employee;
 import com.epam.quarkus.springweb.repository.EmployeeRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.quarkus.test.junit.QuarkusTest;
@@ -21,6 +22,10 @@ public class EmployeeControllerTest {
 
     private List<Employee> expectedEmployees;
 
+    private Employee firstEmployee;
+
+    private Employee secondEmployee;
+
     @Autowired
     private EmployeeRepository employeeRepository;
 
@@ -29,24 +34,86 @@ public class EmployeeControllerTest {
 
     @BeforeEach
     public void setUp() {
-        Employee employee = Employee.builder()
-                .id(1L)
-                .name("testName")
-                .surname("testSurname")
+        expectedEmployees = new ArrayList<>();
+        employeeRepository.deleteAll();
+        firstEmployee = Employee.builder()
+                .name("firstName")
+                .surname("firstSurname")
                 .position("testPosition")
                 .build();
-        employeeRepository.save(employee);
-        expectedEmployees = new ArrayList<>();
-        expectedEmployees.add(employee);
+
+        secondEmployee = Employee.builder()
+                .name("secondName")
+                .surname("secondSurname")
+                .position("testPosition")
+                .build();
     }
 
     @Test
-    public void testHelloEndpoint() {
+    public void getAllEmployeesTest() {
+        //Given
+        expectedEmployees.add(firstEmployee);
+        expectedEmployees.add(secondEmployee);
+        employeeRepository.saveAll(expectedEmployees);
+        //When
         List actualEmployees = given()
-                .when().get("/employee")
+                .when()
+                .get("/employee")
                 .then()
                 .statusCode(200)
                 .extract().as(objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class));
+        //Then
         assertEquals(expectedEmployees, actualEmployees);
+    }
+
+    @Test
+    public void saveEmployeeTest() throws JsonProcessingException {
+        //Given
+        expectedEmployees.add(firstEmployee);
+        //When
+        given()
+                .when()
+                .header("Content-Type", "application/json")
+                .body(objectMapper.writeValueAsString(firstEmployee))
+                .post("/employee")
+                .then()
+                .statusCode(204);
+        List<Employee> actualEmployees = given()
+                .when()
+                .get("/employee")
+                .then()
+                .statusCode(200)
+                .extract().as(objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class));
+        //Then
+        Employee actualEmployee = actualEmployees.get(0);
+        assertEquals(firstEmployee.getName(), actualEmployee.getName());
+        assertEquals(firstEmployee.getSurname(), actualEmployee.getSurname());
+    }
+
+    @Test
+    public void updateEmployeeTest() throws JsonProcessingException {
+        //Given
+        employeeRepository.save(firstEmployee);
+        firstEmployee.setPosition("updatedPosition");
+        expectedEmployees.add(firstEmployee);
+        //When
+        given()
+                .when()
+                .header("Content-Type", "application/json")
+                .body(objectMapper.writeValueAsString(firstEmployee))
+                .post("/employee")
+                .then()
+                .statusCode(204);
+        List<Employee> actualEmployees = given()
+                .when()
+                .get("/employee")
+                .then()
+                .statusCode(200)
+                .extract().as(objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class));
+        //Then
+        Employee actualEmployee = actualEmployees.get(0);
+        assertEquals(firstEmployee.getName(), actualEmployee.getName());
+        assertEquals(firstEmployee.getSurname(), actualEmployee.getSurname());
+        assertEquals(firstEmployee.getPosition(), actualEmployee.getPosition());
     }
 }

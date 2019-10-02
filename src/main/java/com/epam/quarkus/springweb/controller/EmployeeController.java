@@ -1,7 +1,9 @@
 package com.epam.quarkus.springweb.controller;
 
 import com.epam.quarkus.springweb.model.Employee;
-import com.epam.quarkus.springweb.repository.EmployeeRepository;
+import com.epam.quarkus.springweb.search.EmployeeSearchService;
+import com.epam.quarkus.springweb.search.model.SearchCriteria;
+import com.epam.quarkus.springweb.service.EmployeeDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,15 +17,23 @@ import java.util.List;
 public class EmployeeController {
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeDaoService employeeDaoService;
+
+    @Autowired
+    private EmployeeSearchService employeeSearchService;
 
     @GetMapping
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+        return employeeDaoService.findAll();
+    }
+
+    @GetMapping
+    public List<Employee> getEmployee(SearchCriteria searchCriteria) {
+        return employeeSearchService.search(searchCriteria);
     }
 
     @PostMapping
     public void saveEmployee(Employee employee) {
-        employeeRepository.save(employee);
+        employeeDaoService.save(employee);
     }
 }
