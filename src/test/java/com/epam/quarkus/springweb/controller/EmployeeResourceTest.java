@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,11 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
 @RegisterForReflection
-public class EmployeeControllerTest {
+public class EmployeeResourceTest {
 
     private List<Employee> expectedEmployees;
 
@@ -35,7 +37,6 @@ public class EmployeeControllerTest {
     @BeforeEach
     public void setUp() {
         expectedEmployees = new ArrayList<>();
-        employeeDaoService.deleteAll();
         firstEmployee = Employee.builder()
                 .name("firstName")
                 .surname("firstSurname")
@@ -47,6 +48,12 @@ public class EmployeeControllerTest {
                 .surname("secondSurname")
                 .position("testPosition")
                 .build();
+
+    }
+
+    @AfterEach
+    public void tearDown() {
+        employeeDaoService.deleteAll();
     }
 
     @Test
@@ -56,7 +63,7 @@ public class EmployeeControllerTest {
         expectedEmployees.add(secondEmployee);
         employeeDaoService.saveAll(expectedEmployees);
         //When
-        List actualEmployees = given()
+        List<Employee> actualEmployees = given()
                 .when()
                 .get("/employee")
                 .then()
@@ -115,5 +122,50 @@ public class EmployeeControllerTest {
         assertEquals(firstEmployee.getName(), actualEmployee.getName());
         assertEquals(firstEmployee.getSurname(), actualEmployee.getSurname());
         assertEquals(firstEmployee.getPosition(), actualEmployee.getPosition());
+    }
+
+    @Test
+    public void getEmployeeByNameAndSurnameTest() {
+        //Given
+        employeeDaoService.save(firstEmployee);
+
+        //When
+        Employee actualEmployee = given()
+                .when()
+                .header("Content-Type", "application/json")
+                .get("/employee/firstName/firstSurname")
+                .then()
+                .statusCode(200)
+                .extract().as(Employee.class);
+
+        //Then
+        assertEquals(firstEmployee.getPosition(), actualEmployee.getPosition());
+        assertEquals(firstEmployee.getName(), actualEmployee.getName());
+        assertEquals(firstEmployee.getSurname(), actualEmployee.getSurname());
+    }
+
+    @Test
+    public void deleteEmployeeTest() throws JsonProcessingException {
+        //Given
+        employeeDaoService.save(firstEmployee);
+
+        //When
+        given()
+                .when()
+                .header("Content-Type", "application/json")
+                .body(objectMapper.writeValueAsString(firstEmployee))
+                .delete("/employee")
+                .then()
+                .statusCode(204);
+
+        List<Employee> actualEmployees = given()
+                .when()
+                .get("/employee")
+                .then()
+                .statusCode(200)
+                .extract().as(objectMapper.getTypeFactory().constructCollectionType(List.class, Employee.class));
+
+        //Then
+        assertTrue(actualEmployees.isEmpty());
     }
 }
