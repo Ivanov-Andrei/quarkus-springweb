@@ -1,4 +1,4 @@
-package com.epam.quarkus.springweb.model;
+package com.aivanov.quarkus.springweb.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

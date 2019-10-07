@@ -1,6 +1,6 @@
-package com.epam.quarkus.springweb.repository;
+package com.aivanov.quarkus.springweb.repository;
 
-import com.epam.quarkus.springweb.model.Employee;
+import com.aivanov.quarkus.springweb.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

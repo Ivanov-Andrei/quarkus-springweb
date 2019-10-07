@@ -1,6 +1,6 @@
-package com.epam.quarkus.springweb.service;
+package com.aivanov.quarkus.springweb.service;
 
-import com.epam.quarkus.springweb.model.Employee;
+import com.aivanov.quarkus.springweb.model.Employee;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,7 +1,7 @@
-package com.epam.quarkus.springweb.controller;
+package com.aivanov.quarkus.springweb.controller;
 
-import com.epam.quarkus.springweb.model.Employee;
-import com.epam.quarkus.springweb.service.EmployeeDaoService;
+import com.aivanov.quarkus.springweb.model.Employee;
+import com.aivanov.quarkus.springweb.service.EmployeeDaoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.runtime.annotations.RegisterForReflection;

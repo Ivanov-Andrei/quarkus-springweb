@@ -1,8 +1,8 @@
-package com.epam.quarkus.springweb.service.impl;
+package com.aivanov.quarkus.springweb.service.impl;
 
-import com.epam.quarkus.springweb.model.Employee;
-import com.epam.quarkus.springweb.repository.EmployeeRepository;
-import com.epam.quarkus.springweb.service.EmployeeDaoService;
+import com.aivanov.quarkus.springweb.model.Employee;
+import com.aivanov.quarkus.springweb.repository.EmployeeRepository;
+import com.aivanov.quarkus.springweb.service.EmployeeDaoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
