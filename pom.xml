@@ -68,6 +68,11 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-narayana-jta</artifactId>
         </dependency>
+      <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-test-h2</artifactId>
+          <scope>test</scope>
+      </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -5,6 +5,8 @@ import com.aivanov.quarkus.springweb.service.EmployeeDaoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
 @RegisterForReflection
+@QuarkusTestResource(H2DatabaseTestResource.class)
 public class EmployeeResourceTest {
 
     private List<Employee> expectedEmployees;
