@@ -84,7 +84,7 @@ public class EmployeeResourceTest {
                 .body(objectMapper.writeValueAsString(firstEmployee))
                 .post("/employee")
                 .then()
-                .statusCode(204);
+                .statusCode(201);
         List<Employee> actualEmployees = given()
                 .when()
                 .get("/employee")
@@ -110,7 +110,7 @@ public class EmployeeResourceTest {
                 .body(objectMapper.writeValueAsString(firstEmployee))
                 .post("/employee")
                 .then()
-                .statusCode(204);
+                .statusCode(201);
         List<Employee> actualEmployees = given()
                 .when()
                 .get("/employee")

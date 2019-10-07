@@ -3,6 +3,7 @@ package com.epam.quarkus.springweb.service.impl;
 import com.epam.quarkus.springweb.model.Employee;
 import com.epam.quarkus.springweb.repository.EmployeeRepository;
 import com.epam.quarkus.springweb.service.EmployeeDaoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class EmployeeDaoServiceImpl implements EmployeeDaoService {
 
     @Autowired
@@ -18,6 +20,7 @@ public class EmployeeDaoServiceImpl implements EmployeeDaoService {
 
 
     @Override
+    @Transactional
     public void save(Employee employee) {
         Optional<Employee> existingEmployee = employeeRepository.findByNameAndSurname(employee.getName(), employee.getSurname());
         if (existingEmployee.isPresent()) {
@@ -47,6 +50,7 @@ public class EmployeeDaoServiceImpl implements EmployeeDaoService {
     }
 
     @Override
+    @Transactional
     public void saveAll(List<Employee> employees) {
         employeeRepository.saveAll(employees);
     }
@@ -54,7 +58,12 @@ public class EmployeeDaoServiceImpl implements EmployeeDaoService {
     @Override
     @Transactional
     public void delete(Employee employee) {
-        employeeRepository.delete(employee);
+        Optional<Employee> existingEmployee = findByNameAndSurname(employee.getName(), employee.getSurname());
+        if (existingEmployee.isPresent()) {
+            employeeRepository.delete(existingEmployee.get());
+        } else {
+            log.info(String.format("there is no employee with name %s and surname %s", employee.getName(), employee.getSurname()));
+        }
     }
 
     @Override
