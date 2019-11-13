@@ -10,11 +10,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <slf4jVersion>1.6.1</slf4jVersion>
         <surefire-plugin.version>2.22.0</surefire-plugin.version>
-        <quarkus.version>0.23.0</quarkus.version>
+        <quarkus.version>1.0.0.CR1</quarkus.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.10</lombok.version>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <compiler-plugin.version>3.8.1</compiler-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -87,6 +88,10 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler-plugin.version}</version>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
