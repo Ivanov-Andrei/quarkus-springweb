@@ -32,11 +32,7 @@ public class EmployeeResource {
     public ResponseEntity<Employee> getEmployee(@PathVariable("name") String name, @PathVariable("surname") String surname) {
 
         Optional<Employee> employee = employeeDaoService.findByNameAndSurname(name, surname);
-        if (employee.isPresent()) {
-            return ResponseEntity.ok(employee.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return employee.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
